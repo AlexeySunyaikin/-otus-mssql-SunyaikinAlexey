@@ -119,7 +119,7 @@ select top 10 with ties o.OrderID
 		, o.OrderDate
 from [Sales].[Orders] as o
 	join [Sales].[Customers] as c on c.CustomerID = o.SalespersonPersonID
-	join [Application].[People] as p on p.PersonID = o.CustomerID
+	join [Application].[People] as p on p.PersonID = o.SalespersonPersonID
 order by o.OrderDate desc
 
 /*
