@@ -70,7 +70,18 @@ order by max(TransactionAmount) desc
 который осуществлял упаковку заказов (PackedByPersonID).
 */
 
-TODO: напишите здесь свое решение
+select distinct
+	cc.PostalCityID
+	, cc.CityName
+	, p.FullName
+from [Sales].[Invoices] as i
+	left join [Sales].[InvoiceLines] as il on il.InvoiceID = i.InvoiceID
+	left join (select CustomerID, PostalCityID, CityName
+				from [Sales].[Customers] as c
+					left join [Application].[Cities] as city on city.CityID = PostalCityID) as cc on cc.CustomerID = i.CustomerID
+	left join [Application].[People] as p on p.PersonID = i.PackedByPersonID
+	where i.InvoiceID in ((select top 3 InvoiceID from [Sales].[InvoiceLines] group by InvoiceID order by max(UnitPrice) desc))
+
 
 -- ---------------------------------------------------------------------------
 -- Опциональное задание
