@@ -30,21 +30,27 @@ USE WideWorldImporters
 Продажи смотреть в таблице Sales.Invoices.
 */
 
-select * from [Application].People
+select PersonID
+		, FullName 
+from [Application].People
 where PersonID not in (
 					select AccountsPersonID
 					from [Sales].[Invoices] 
 					where InvoiceDate = '20150704') 
 and IsSalesPerson = 1
-select top 100 * from [Application].People where IsSalesPerson = 1
-select top 100 * from [Sales].[Invoices]
 
 /*
 2. Выберите товары с минимальной ценой (подзапросом). Сделайте два варианта подзапроса. 
 Вывести: ИД товара, наименование товара, цена.
 */
 
-TODO: напишите здесь свое решение
+select StockItemID
+		, StockItemName
+		, UnitPrice
+from [Warehouse].[StockItems]
+where UnitPrice = (
+				select min(unitPrice) 
+				from [Warehouse].[StockItems])
 
 /*
 3. Выберите информацию по клиентам, которые перевели компании пять максимальных платежей 
@@ -52,7 +58,11 @@ TODO: напишите здесь свое решение
 Представьте несколько способов (в том числе с CTE). 
 */
 
-TODO: напишите здесь свое решение
+select top 5 with ties CustomerID
+		, max(TransactionAmount) as MaxTransactionAmount
+from Sales.CustomerTransactions
+group by CustomerID
+order by max(TransactionAmount) desc
 
 /*
 4. Выберите города (ид и название), в которые были доставлены товары, 
